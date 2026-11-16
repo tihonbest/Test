@@ -1,63 +1,83 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0d12">
-<meta name="description" content="Спокойная короткая разминка для подвижности запястий и плеч.">
-<title>Мобилити — запястья и плечи</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0d12"><meta name="description" content="Интерактивная лаборатория движений с ESP32 и MPU6050.">
+<title>Mobility Lab — ESP32 Motion</title>
 <style>
-:root{color-scheme:dark;--bg:#0b0d12;--panel:#131720;--panel2:#191f2a;--line:#293140;--text:#f3f5f8;--muted:#929bab;--accent:#b7f36b;--blue:#83b8ff;--radius:22px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 80% -15%,#273449 0,transparent 38%),var(--bg);color:var(--text);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-button{font:inherit}.wrap{width:min(1120px,calc(100% - 36px));margin:auto}
-header{display:flex;justify-content:space-between;align-items:center;padding:24px 0}.brand{display:flex;align-items:center;gap:10px;font-weight:750;letter-spacing:-.04em}.mark{width:34px;height:34px;border-radius:11px;background:var(--accent);color:#10140b;display:grid;place-items:center;font-weight:900}.topnote{color:var(--muted);font-size:13px}
-.hero{padding:56px 0 38px;display:grid;grid-template-columns:1.3fr .7fr;gap:30px;align-items:end}.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(42px,7vw,76px);line-height:.99;letter-spacing:-.065em;margin:16px 0}.hero p{color:var(--muted);max-width:600px;font-size:17px}.hero-card{background:linear-gradient(145deg,#1c2632,#121720);border:1px solid var(--line);border-radius:var(--radius);padding:24px}.hero-card strong{display:block;font-size:38px;letter-spacing:-.06em}.hero-card span{color:var(--muted);font-size:13px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.tab,.action{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:11px 16px;border-radius:999px;cursor:pointer;transition:.2s}.tab[aria-pressed=true]{background:var(--accent);color:#11170b;border-color:var(--accent);font-weight:750}.tab:hover,.action:hover{border-color:var(--accent)}
-.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:36px 0 16px}.section-head h2{margin:0;font-size:26px;letter-spacing:-.04em}.section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;min-height:220px}.card-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.num{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.1em}.duration{color:var(--muted);font-size:12px;background:var(--panel2);padding:6px 10px;border-radius:99px}.card h3{font-size:20px;letter-spacing:-.035em;margin:18px 0 7px}.card p{color:var(--muted);font-size:14px;margin:0 0 16px}.cue{border-left:2px solid var(--accent);padding-left:11px;font-size:13px;color:#dce5d2;margin-top:auto}
-.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:24px 0}.primary{background:var(--accent);color:#11170b;border:0;font-weight:800}.timer{margin-left:auto;display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);padding:10px 14px;border-radius:14px}.timer strong{font-variant-numeric:tabular-nums;font-size:22px;min-width:64px}.timer small{color:var(--muted)}
-.progress{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin:10px 0 0}.progress div{height:100%;width:0;background:var(--accent);transition:width .25s}
-.notice{margin:34px 0 50px;padding:20px 22px;border-radius:18px;background:#211d17;border:1px solid #4b3c27;color:#e8d8b9;font-size:13px}.notice b{color:#ffe8b4}footer{border-top:1px solid var(--line);padding:22px 0 36px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:15px}
-.hidden{display:none!important}
-@media(max-width:720px){.hero{grid-template-columns:1fr;padding-top:35px}.hero-card{display:flex;justify-content:space-between;align-items:center}.grid{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.timer{margin-left:0;width:100%;justify-content:space-between}.topnote{display:none}footer{flex-direction:column}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
-</style>
-</head>
-<body>
-<div class="wrap">
-<header><div class="brand"><div class="mark">M</div> MOBILITY / LAB</div><div class="topnote">Короткая практика движения · без оборудования</div></header>
+:root{color-scheme:dark;--bg:#0b0d12;--panel:#131720;--panel2:#1a202b;--line:#293140;--text:#f3f5f8;--muted:#929bab;--accent:#b7f36b;--blue:#83b8ff;--red:#ff8c8c;--r:22px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 78% -12%,#29394c 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit;cursor:pointer}.wrap{width:min(1120px,calc(100% - 36px));margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 0}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.04em}.mark{width:34px;height:34px;border-radius:11px;background:var(--accent);color:#10140b;display:grid;place-items:center;font-weight:900}.muted,.topnote{color:var(--muted);font-size:13px}
+.hero{padding:48px 0 30px;display:grid;grid-template-columns:1.3fr .7fr;gap:26px;align-items:end}.eyebrow{color:var(--accent);font-size:11px;font-weight:850;letter-spacing:.17em;text-transform:uppercase}.hero h1{font-size:clamp(42px,7vw,72px);line-height:.98;letter-spacing:-.065em;margin:15px 0}.hero p{color:var(--muted);max-width:620px;font-size:16px}.hero-aside,.panel,.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}.hero-aside{padding:22px;background:linear-gradient(145deg,#1c2632,#121720)}.hero-aside strong{display:block;font-size:30px;letter-spacing:-.05em}.hero-aside span{color:var(--muted);font-size:12px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:32px 0 14px}.section-head h2{margin:0;font-size:24px;letter-spacing:-.04em}.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.panel{padding:22px}.connection{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.dot{width:9px;height:9px;border-radius:50%;background:#747e8d;box-shadow:0 0 0 5px #747e8d20}.dot.on{background:var(--accent);box-shadow:0 0 0 5px #b7f36b20}.status{font-weight:700}.push{margin-left:auto}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:11px 16px;border-radius:999px;transition:.2s}.btn:hover{border-color:var(--accent)}.btn.primary{background:var(--accent);color:#11170b;border-color:var(--accent);font-weight:800}.btn:disabled{opacity:.5;cursor:not-allowed}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.metric{background:var(--panel2);padding:17px;border-radius:16px;min-width:0}.metric label{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:clamp(24px,4vw,36px);letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin-top:7px}.metric small{color:var(--muted);font-size:11px}
+.chartbox{margin-top:16px;background:#0e1219;border:1px solid var(--line);border-radius:16px;padding:14px}.charthead{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin-bottom:8px}canvas{display:block;width:100%;height:160px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{padding:20px}.card h3{margin:7px 0;font-size:19px;letter-spacing:-.03em}.card p{margin:0;color:var(--muted);font-size:13px}.tag{font-size:11px;color:var(--accent);letter-spacing:.12em;font-weight:800}.routine{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}.routine span{font-size:12px;color:var(--muted)}
+.notice{margin:24px 0 42px;padding:18px 20px;border-radius:18px;background:#211d17;border:1px solid #4b3c27;color:#e8d8b9;font-size:12px}.notice b{color:#ffe8b4}footer{border-top:1px solid var(--line);padding:22px 0 34px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px}
+@media(max-width:720px){.hero{grid-template-columns:1fr;padding-top:32px}.metrics{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.push{margin-left:0}.connection{align-items:flex-start}footer{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body><div class="wrap">
+<header><div class="brand"><div class="mark">M</div>MOBILITY / LAB</div><div class="topnote">MOTION SYSTEM · ESP32 + MPU6050</div></header>
 <main>
-<section class="hero">
-<div><div class="eyebrow">Movement basics · 01</div><h1>Двигайся<br>свободнее.</h1><p>Небольшая подборка мягких движений для запястий и плеч. Выбирай нужный раздел, выполняй спокойно и не гонись за амплитудой.</p></div>
-<div class="hero-card"><div><strong>6–8 мин</strong><span>ориентировочная длительность</span></div><div aria-hidden="true" style="font-size:42px">↗</div></div>
+<section class="hero"><div><div class="eyebrow">Sensor interface · prototype 02</div><h1>Движение.<br>В цифрах.</h1><p>Подключай ESP32 по Bluetooth Low Energy, смотри показания MPU6050 и наблюдай, как меняется наклон запястья. Пока плата не подключена, интерфейс можно проверить в деморежиме.</p></div><div class="hero-aside"><strong>ESP32 / BLE</strong><span>Прямая связь с устройством · без облака</span></div></section>
+
+<div class="section-head"><div><h2>Подключение датчика</h2><p>Bluetooth Low Energy · UART-профиль</p></div><div class="topnote" id="browserSupport">Проверка браузера…</div></div>
+<section class="panel">
+ <div class="connection"><span class="dot" id="dot"></span><span class="status" id="connectionStatus">Не подключено</span><span class="muted" id="deviceName">Ожидаю ESP32</span><button class="btn primary push" id="connectBtn">Подключить ESP32</button><button class="btn" id="demoBtn">Демо-режим</button><button class="btn" id="disconnectBtn" disabled>Отключить</button></div>
+ <div class="metrics">
+  <div class="metric"><label>Наклон вперёд / назад</label><strong id="pitch">—°</strong><small>Расчёт по акселерометру</small></div>
+  <div class="metric"><label>Наклон в сторону</label><strong id="roll">—°</strong><small>Расчёт по акселерометру</small></div>
+  <div class="metric"><label>Температура MPU6050</label><strong id="temp">—°</strong><small>Внутри микросхемы</small></div>
+  <div class="metric"><label>Данные</label><strong id="rate">—</strong><small>Обновление / сек</small></div>
+ </div>
+ <div class="chartbox"><div class="charthead"><span>Динамика наклона запястья</span><span id="chartHint">Ожидание данных</span></div><canvas id="chart" aria-label="График угла наклона"></canvas></div>
 </section>
-<div class="tabs" role="group" aria-label="Выбор комплекса">
-<button class="tab" data-filter="all" aria-pressed="true">Все упражнения</button>
-<button class="tab" data-filter="wrist" aria-pressed="false">Запястья</button>
-<button class="tab" data-filter="shoulder" aria-pressed="false">Плечи</button>
-</div>
-<div class="section-head"><div><h2>Практика</h2><p id="count">6 упражнений · мягкий темп</p></div><span class="topnote">Без боли · без рывков</span></div>
-<section class="grid" id="cards" aria-live="polite">
-<article class="card" data-kind="wrist"><div class="card-top"><span class="num">01 / WRIST</span><span class="duration">40 секунд</span></div><h3>Круги кистями</h3><p>Вытяни руки перед собой и медленно вращай кистями по кругу. Затем поменяй направление.</p><div class="cue">Плечи расслаблены, движения небольшие.</div></article>
-<article class="card" data-kind="wrist"><div class="card-top"><span class="num">02 / WRIST</span><span class="duration">30 секунд</span></div><h3>Сгибание и разгибание</h3><p>Мягко согни кисти вниз и верни в нейтральное положение, затем слегка направь ладони вверх.</p><div class="cue">Не дави на кисть второй рукой и не пружинь.</div></article>
-<article class="card" data-kind="wrist"><div class="card-top"><span class="num">03 / WRIST</span><span class="duration">30 секунд</span></div><h3>Раскрытие пальцев</h3><p>Спокойно сожми пальцы в свободный кулак, затем широко раскрой ладонь. Повтори несколько раз.</p><div class="cue">Не сжимай кулак изо всех сил.</div></article>
-<article class="card" data-kind="shoulder"><div class="card-top"><span class="num">04 / SHOULDER</span><span class="duration">40 секунд</span></div><h3>Плечевые круги</h3><p>Подними плечи немного вверх, отведи назад и плавно опусти. Повтори, затем смени направление.</p><div class="cue">Шея свободна, не поднимай плечи к ушам надолго.</div></article>
-<article class="card" data-kind="shoulder"><div class="card-top"><span class="num">05 / SHOULDER</span><span class="duration">40 секунд</span></div><h3>Сведение лопаток</h3><p>Опусти руки вдоль тела. Мягко направь лопатки друг к другу, задержись на пару секунд и расслабься.</p><div class="cue">Не прогибай поясницу и не напрягай шею.</div></article>
-<article class="card" data-kind="shoulder"><div class="card-top"><span class="num">06 / SHOULDER</span><span class="duration">40 секунд</span></div><h3>Скольжение руками по стене</h3><p>Встань лицом к стене, поставь ладони на неё и плавно скользи руками вверх только в комфортном диапазоне.</p><div class="cue">Не пытайся поднять руки выше, чем комфортно.</div></article>
+
+<div class="section-head"><div><h2>Режим движения</h2><p>Подсказки и контроль данных датчика</p></div></div>
+<section class="grid">
+ <article class="card"><div class="tag">01 / WRIST MOBILITY</div><h3>Контроль положения кисти</h3><p>Держи предплечье спокойно и медленно меняй положение кисти в комфортном диапазоне. График покажет изменение ориентации датчика на запястье.</p><div class="routine"><span>Наблюдай за плавностью линии</span><span>Без рывков</span></div></article>
+ <article class="card"><div class="tag">02 / SHOULDER · EXTERNAL ROTATION</div><h3>Наружная ротация плеча</h3><p>Это название движения, а не измерение плечевого сустава: один MPU6050 на запястье показывает ориентацию самой платы. Для оценки движения плеча понадобится дополнительный датчик и корректная методика.</p><div class="routine"><span>Только комфортная амплитуда</span><span>Не через боль</span></div></article>
 </section>
-<div class="controls"><button class="action primary" id="start">Запустить таймер · 1 минута</button><button class="action" id="reset">Сбросить</button><div class="timer" role="status" aria-live="polite"><div><small>Таймер</small><br><strong id="clock">01:00</strong></div><small id="timerState">Готов к старту</small></div></div>
-<div class="progress" aria-label="Прогресс таймера"><div id="bar"></div></div>
-<aside class="notice"><b>Важно.</b> Это общая разминка, а не лечение и не программа реабилитации после травмы. Двигайся в комфортном диапазоне, без рывков и усилия через боль. Если появляется боль, онемение, слабость или дискомфорт усиливается — прекрати упражнение и обсуди это со взрослым и медицинским специалистом. При недавней травме или ограничениях врача сначала уточни, какие движения допустимы.</aside>
+<aside class="notice"><b>Важно о точности.</b> MPU6050 измеряет ускорение и угловую скорость, а не абсолютный угол сустава. Здесь наклон вычисляется приблизительно по акселерометру; при движении и вращении показания могут искажаться. Температура — внутренняя температура микросхемы, не температура тела или воздуха. Сайт не оценивает состояние здоровья и не заменяет рекомендации специалиста. Прекрати движение при боли или онемении.</aside>
 </main>
-<footer><span>MOBILITY / LAB — личная страница практики</span><span>Сделано для спокойного движения.</span></footer>
+<footer><span>MOBILITY / LAB · ESP32 + MPU6050</span><span>BLE data stays between your board and this page.</span></footer>
 </div>
 <script>
-const tabs=[...document.querySelectorAll('.tab')],cards=[...document.querySelectorAll('.card')],count=document.getElementById('count');
-tabs.forEach(tab=>tab.addEventListener('click',()=>{const f=tab.dataset.filter;tabs.forEach(t=>t.setAttribute('aria-pressed',String(t===tab)));let n=0;cards.forEach(c=>{const show=f==='all'||c.dataset.kind===f;c.classList.toggle('hidden',!show);if(show)n++});count.textContent=n+' упражнений · мягкий темп'}));
-let remaining=60,interval=null;const clock=document.getElementById('clock'),state=document.getElementById('timerState'),bar=document.getElementById('bar'),start=document.getElementById('start');
-function render(){clock.textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(remaining%60).padStart(2,'0');bar.style.width=((60-remaining)/60*100)+'%'}
-start.addEventListener('click',()=>{if(interval){clearInterval(interval);interval=null;start.textContent='Продолжить';state.textContent='Пауза';return}if(remaining===0)remaining=60;state.textContent='Идёт отсчёт';start.textContent='Пауза';interval=setInterval(()=>{remaining--;render();if(remaining<=0){clearInterval(interval);interval=null;state.textContent='Время вышло';start.textContent='Начать заново'}},1000)});
-document.getElementById('reset').addEventListener('click',()=>{clearInterval(interval);interval=null;remaining=60;render();state.textContent='Готов к старту';start.textContent='Запустить таймер · 1 минута'});
-render();
-</script>
-</body></html>
+/* BLE profile: Nordic UART Service UUIDs. ESP32 firmware must expose NUS TX notify.
+   Expected TX lines: JSON {"ax":0,"ay":0,"az":16384,"temp":25.0}
+   or CSV: ax,ay,az,temp (raw MPU6050 accel counts; temp in °C). */
+const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+const $=id=>document.getElementById(id);
+const connectBtn=$('connectBtn'),demoBtn=$('demoBtn'),disconnectBtn=$('disconnectBtn');
+let device=null,server=null,characteristic=null,demoTimer=null,lastTick=0,samples=[],demoPhase=0,decoder=new TextDecoder(),buffer='';
+function setStatus(text,on=false){$('connectionStatus').textContent=text;$('dot').classList.toggle('on',on)}
+function showData(d){const ax=Number(d.ax),ay=Number(d.ay),az=Number(d.az);if(![ax,ay,az].every(Number.isFinite))return;
+ const pitch=Math.atan2(-ax,Math.sqrt(ay*ay+az*az))*180/Math.PI;
+ const roll=Math.atan2(ay,az)*180/Math.PI;
+ $('pitch').textContent=pitch.toFixed(1)+'°';$('roll').textContent=roll.toFixed(1)+'°';
+ $('temp').textContent=Number.isFinite(Number(d.temp))?Number(d.temp).toFixed(1)+'°':'—°';
+ const now=performance.now();if(lastTick){const hz=1000/(now-lastTick);$('rate').textContent=hz.toFixed(1)}lastTick=now;
+ samples.push(pitch);if(samples.length>90)samples.shift();drawChart();$('chartHint').textContent='Поток данных активен';
+}
+function parseLine(line){line=line.trim();if(!line)return;try{let d;if(line[0]==='{')d=JSON.parse(line);else{const [ax,ay,az,temp]=line.split(',').map(Number);d={ax,ay,az,temp}}showData(d)}catch(e){console.warn('Bad sensor packet',line)}}
+function onValue(event){buffer+=decoder.decode(event.target.value);const lines=buffer.split(/\r?\n/);buffer=lines.pop()||'';lines.forEach(parseLine)}
+function drawChart(){const c=$('chart'),ctx=c.getContext('2d'),w=c.clientWidth,h=160,dpr=window.devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);
+ ctx.strokeStyle='#293140';ctx.lineWidth=1;for(let i=0;i<5;i++){const y=10+i*(h-20)/4;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+ ctx.fillStyle='#929bab';ctx.font='10px system-ui';ctx.fillText('+90°',5,12);ctx.fillText('0°',5,h/2);ctx.fillText('−90°',5,h-5);
+ if(samples.length<2)return;ctx.beginPath();samples.forEach((v,i)=>{const x=i/(Math.max(89,samples.length-1))*w,y=h/2-Math.max(-90,Math.min(90,v))/180*(h-20);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.strokeStyle='#b7f36b';ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.stroke();
+}
+async function disconnect(){stopDemo();if(characteristic){characteristic.removeEventListener('characteristicvaluechanged',onValue);try{await characteristic.stopNotifications()}catch(e){}}if(device&&device.gatt&&device.gatt.connected)device.gatt.disconnect();device=null;server=null;characteristic=null;connectBtn.disabled=false;disconnectBtn.disabled=true;demoBtn.disabled=false;$('deviceName').textContent='Ожидаю ESP32';setStatus('Не подключено');$('chartHint').textContent='Ожидание данных'}
+function stopDemo(){if(demoTimer){clearInterval(demoTimer);demoTimer=null}}
+async function connect(){if(!navigator.bluetooth){setStatus('BLE недоступен в этом браузере');$('chartHint').textContent='Открой страницу в совместимом браузере';return}
+ try{setStatus('Поиск устройства…');device=await navigator.bluetooth.requestDevice({filters:[{services:[SERVICE]}],optionalServices:[SERVICE]});device.addEventListener('gattserverdisconnected',()=>{setStatus('Соединение потеряно');connectBtn.disabled=false;disconnectBtn.disabled=true;$('deviceName').textContent='Отключено';characteristic=null});
+ server=await device.gatt.connect();const service=await server.getPrimaryService(SERVICE);characteristic=await service.getCharacteristic(TX);await characteristic.startNotifications();characteristic.addEventListener('characteristicvaluechanged',onValue);stopDemo();connectBtn.disabled=true;disconnectBtn.disabled=false;demoBtn.disabled=true;$('deviceName').textContent=device.name||'ESP32';setStatus('Подключено',true);$('chartHint').textContent='Принимаю BLE-пакеты';
+ }catch(e){console.error(e);setStatus(e.name==='NotFoundError'?'Устройство не выбрано':'Не удалось подключиться');$('deviceName').textContent=e.message||'Проверь плату и BLE';connectBtn.disabled=false}}
+function startDemo(){if(device&&device.gatt&&device.gatt.connected)disconnect();stopDemo();demoPhase=0;lastTick=0;samples=[];setStatus('Демо-режим',true);$('deviceName').textContent='Виртуальный датчик';connectBtn.disabled=false;disconnectBtn.disabled=false;demoBtn.disabled=false;demoTimer=setInterval(()=>{demoPhase+=.12;showData({ax:Math.sin(demoPhase)*3500,ay:Math.sin(demoPhase*.7)*2200,az:16000,temp:25+Math.sin(demoPhase*.2)*.7})},120)}
+connectBtn.addEventListener('click',connect);demoBtn.addEventListener('click',startDemo);disconnectBtn.addEventListener('click',disconnect);
+$('browserSupport').textContent=navigator.bluetooth?'Web Bluetooth доступен':'Этот браузер без Web Bluetooth';
+if(!navigator.bluetooth){connectBtn.title='Safari на iPhone/iPad не поддерживает Web Bluetooth напрямую. Используй деморежим для проверки интерфейса.'}
+window.addEventListener('resize',drawChart);drawChart();
+</script></body></html>
